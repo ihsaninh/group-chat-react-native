@@ -1,6 +1,6 @@
 # React Native Boilerplate
 
-##Features 
+## Features 
 
 Installed
 
