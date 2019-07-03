@@ -1,28 +1,33 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Text, Image, ImageBackground, ScrollView, Dimensions } from 'react-native';
-import { Input, Icon, Avatar } from 'react-native-elements';
+import React, { Component } from 'react'
+import { StyleSheet, View, Text, Image, ImageBackground, ScrollView, Dimensions, AsyncStorage } from 'react-native'
+import { Input, Icon, Avatar } from 'react-native-elements'
+import axios from 'axios'
 
 class Login extends Component {
 	constructor(props) {
-	  super(props);
+	  super(props)
 	
 	  this.state = {
 	  	inputEmail: '',
 	  	inputPassword: ''
 	  };
 	}
-
-	_handleLogin = () => {
-		if(this.state.inputEmail.length < 1 ||this.state.inputPassword.length < 1 ) {
-			alert('Field ga boleh kosong')
-		}else if(this.state.inputEmail !== 'ihsan.inh@gmail.com') {
-			alert('Email salah')
-		}else if(this.state.inputPassword !== '123') {
-			alert('Password salah')
-		} else if(this.state.inputEmail === 'ihsan.inh@gmail.com' && this.state.inputPassword === '123'){
-			 this.props.navigation.navigate("Home");
-		}
-	} 
+	
+	handleLogin = () => {
+        axios.post("http://192.168.0.26:3333/api/auth/login", {
+                email: this.state.inputEmail,
+                password: this.state.inputPassword
+            })
+            .then(res => {
+                const token = res.data.token;
+                AsyncStorage.setItem("token", token);
+                this.props.navigation.navigate('Home')
+            })
+            .catch(error => {
+            	console.log(error)
+                alert("kesalahan saat login silahkan coba lagi")
+            })
+    }
 
   render() {
     return (
@@ -40,19 +45,23 @@ class Login extends Component {
 					  placeholder='Password' containerStyle={{marginTop: 20}}
 					  onChangeText={inputPassword => this.setState({ inputPassword }) }
 					/>
-					<View style={{marginLeft: 10, marginTop: 20}}>
-				    	<Text style={{color: '#494F5A', fontSize: 30, fontWeight: '500'}}>Sign In</Text>
-				    	<Text style={{color: '#494F5A', fontSize: 16, textDecorationLine: 'underline'}}>Forgot Password</Text>
-				    	<Avatar
-				    	  size={50}
-						  rounded
-						  icon={{name: 'arrow-forward', type: 'material'}}
-						  onPress={this._handleLogin}
-						  activeOpacity={0.7}
-						  overlayContainerStyle={{backgroundColor: '#5280D7'}}
-						  containerStyle={{marginLeft: 200, marginTop: -45}}
-						 
-						/>
+					<View style={{marginLeft: 10, marginTop: 20, flexDirection: 'row'}}>
+						<View style={{alignSelf: 'flex-start', alignItems: 'flex-start'}}>
+					    	<Text style={{color: '#494F5A', fontSize: 30, fontWeight: '500'}}>Sign In</Text>
+					    	<Text style={{color: '#494F5A', fontSize: 16, textDecorationLine: 'underline'}}>Forgot Password</Text>
+				    	</View>
+				    	<View style={{alignSelf: 'flex-end', alignItems: 'flex-end'}}>
+					    	<Avatar
+					    	  size={50}
+							  rounded
+							  icon={{name: 'arrow-forward', type: 'material'}}
+							  onPress={this.handleLogin}
+							  activeOpacity={0.7}
+							  overlayContainerStyle={{backgroundColor: '#5280D7'}}
+							  containerStyle={{marginTop: -45, marginLeft: 110}}
+							 
+							/>
+						</View>
 				    </View>
 				    <View style={{marginTop: 70}}>
 				    	<Text style={{textAlign: 'center'}}>Dont have an account? <Text style={{color: '#7D93BB'}}>Please Signup</Text></Text>
@@ -68,6 +77,6 @@ class Login extends Component {
 
 const styles = StyleSheet.create({
 
-});
+})
 
-export default Login;
+export default Login
