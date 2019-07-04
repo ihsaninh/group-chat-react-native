@@ -13,7 +13,7 @@ import { Button, ListItem } from "react-native-elements";
 import axios from "axios";
 import TimeAgo from "react-native-timeago";
 
-class RoomChat extends Component {
+class Chat extends Component {
     constructor(props) {
         super(props);
 
@@ -21,32 +21,32 @@ class RoomChat extends Component {
             inputContent: "",
             chats: [],
             modalVisible: false,
-            myId: null,
-            chatid: null
+            user_id: null,
+            chatid: null,
         };
         setInterval(this.getDataChat, 1000);
     }
 
     componentDidMount() {
         this.getDataChat();
+        this.getUserData();
     }
 
-    setModalVisible(visible, chatid) {
-        this.setState({ modalVisible: visible, chatid: chatid });
-    }
+    // setModalVisible(visible, chatid) {
+    //     this.setState({ modalVisible: visible, chatid: chatid });
+    // }
 
-    getDataChat = async () => {
+    getUserData = async () => {
         const token = await AsyncStorage.getItem("token");
         const headers = {
             Authorization: "Bearer " + token
         };
         axios
-            .get("http://192.168.0.26:3000/chats", { headers })
+            .get("http://192.168.0.26:3333/api/auth/getuser", { headers })
             .then(res => {
-                const chats = res.data.data;
+                const user_id = res.data.id;
                 this.setState({
-                    chats: chats,
-                    myId: res.data.myId
+                    user_id: user_id,
                 });
             })
             .catch(err => {
@@ -54,76 +54,74 @@ class RoomChat extends Component {
             });
     };
 
-    handleDelete = async chatid => {
+    getDataChat = async () => {
         const token = await AsyncStorage.getItem("token");
+        const { navigation } = this.props;
+        const room_id = navigation.getParam('room_id', this.props.navigation.state.params.room_id);
         const headers = {
             Authorization: "Bearer " + token
         };
-        var chatid = chatid;
         axios
-            .delete(`http://192.168.0.26:3000/chats/${chatid}`, {
-                headers: headers
-            })
+            .get(`http://192.168.0.26:3333/api/v1/rooms/${room_id}`, { headers })
             .then(res => {
-                this.setState({ modalVisible: !this.state.modalVisible });
-                alert("chat berhasil dihapus");
+                const chats = res.data.chat;
+                this.setState({
+                    chats: chats,
+                });
             })
-            .catch(error => {
-                alert(error);
+            .catch(err => {
+                alert("gagal fetch data");
             });
     };
 
-    handleLogout = async () => {
-        console.log('ok')
-        const token = await AsyncStorage.getItem("token");
-        AsyncStorage.removeItem("token");
-        this.props.navigation.navigate("Login");
-    };
+    // handleDelete = async chatid => {
+    //     const token = await AsyncStorage.getItem("token");
+    //     const headers = {
+    //         Authorization: "Bearer " + token
+    //     };
+    //     var chatid = chatid;
+    //     axios
+    //         .delete(`http://192.168.0.26:3000/chats/${chatid}`, {
+    //             headers: headers
+    //         })
+    //         .then(res => {
+    //             this.setState({ modalVisible: !this.state.modalVisible });
+    //             alert("chat berhasil dihapus");
+    //         })
+    //         .catch(error => {
+    //             alert(error);
+    //         });
+    // };
+
+    // handleLogout = async () => {
+    //     console.log('ok')
+    //     const token = await AsyncStorage.getItem("token");
+    //     AsyncStorage.removeItem("token");
+    //     this.props.navigation.navigate("Login");
+    // };
 
     handleCreate = async () => {
         const token = await AsyncStorage.getItem("token");
+        const { navigation } = this.props;
+        const room_id = navigation.getParam('room_id', this.props.navigation.state.params.room_id);
         const headers = {
             Authorization: "Bearer " + token
         };
         const data = {
             content: this.state.inputContent
+            room_id: room_id
         };
         axios
-            .post("http://192.168.0.26:3000/chats", data, { headers: headers })
+            .post("http://192.168.0.26:3333/api/v1/chats", data, { headers: headers })
             .then(res => {
-                this.setState({
-                    inputContent: ""
-                });
+            	console.log(res)
+                // this.setState({
+                //     inputContent: ""
+                // });
             })
             .catch(error => {
                 alert("ra ono isine mas");
             });
-    };
-
-    static navigationOptions = {
-        title: "Room Chat",
-        headerStyle: {
-            backgroundColor: "#ffffff",
-            height: 50,
-            textAlign: "center",
-            elevation: 0
-        },
-        headerTintColor: "#333",
-        headerTitleStyle: {
-            fontWeight: "bold",
-            fontSize: 16
-        },
-        headerLeft: null,
-        headerRight: (
-            <View style={{ marginRight: 10 }}>
-                <Button
-                    onPress={this.handleLogout}
-                    title="Logout"
-                    color="#fff"
-                    buttonStyle={{ borderRadius: 10 }}
-                />
-            </View>
-        )
     };
 
     render() {
@@ -149,7 +147,7 @@ class RoomChat extends Component {
                                     }}>
                                     <ListItem
                                         containerStyle={
-                                            chat.user.id === this.state.myId
+                                            chat.user.id === this.state.user_id
                                                 ? styles.contentuser
                                                 : styles.contentuserlain
                                         }
@@ -285,4 +283,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default RoomChat;
+export default Chat;

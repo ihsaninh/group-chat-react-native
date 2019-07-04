@@ -20,7 +20,9 @@ class Login extends Component {
             })
             .then(res => {
                 const token = res.data.token;
+                const user_id = res.data.id
                 AsyncStorage.setItem("token", token);
+                AsyncStorage.setItem("user_id", user_id);
                 this.props.navigation.navigate('Home')
             })
             .catch(error => {

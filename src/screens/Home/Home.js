@@ -1,41 +1,42 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Image, StatusBar, TouchableOpacity, ScrollView} from 'react-native';
+import { StyleSheet, View, Text, Image, StatusBar, TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
 import { Icon, ListItem, Avatar } from 'react-native-elements';
+import axios from 'axios';
 
 class Home extends Component {
+
+	constructor(props) {
+	  super(props);
+	
+	  this.state = {
+	  	chatlists: [],
+	  };
+	  setInterval(this.getListChat, 1000);
+	}
+
+	componentDidMount() {
+		 this.getListChat();
+	}
+
+	getListChat = async () => {
+        const token = await AsyncStorage.getItem("token");
+        const headers = {
+            Authorization: "Bearer " + token
+        };
+        axios
+            .get("http://192.168.0.26:3333/api/v1/rooms/", { headers })
+            .then(res => {
+                const chatlists = res.data.data;
+                this.setState({
+                    chatlists: chatlists,
+                });
+            })
+            .catch(err => {
+                alert("gagal fetch data");
+            });
+    };
+
   render() {
-  	const list = [
-  		{
-		    name: 'Prilly Latuconsina',
-		    avatar_url: 'https://asset.kompas.com/crop/0x7:1000x673/750x500/data/photo/2019/01/14/1255725980.jpg',
-		    subtitle: 'Hello dear, Good Evening all!'
-		  },
-		  {
-		    name: 'Mark Zuckerberg',
-		    avatar_url: 'https://www.biography.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cg_face%2Cq_auto:good%2Cw_300/MTQyMDA0NDgwMzUzNzcyNjA2/mark-zuckerberg_gettyimages-512304736jpg.jpg',
-		    subtitle: 'Hello dear, Good Evening all!'
-		  },
-		  {
-		    name: 'Natasha Wilona',
-		    avatar_url: 'https://media.matamata.com/thumbs/2018/06/19/29810-natasha-wilona/745x489-img-29810-natasha-wilona.jpg',
-		    subtitle: 'Lorem ipsum dolor sit amet'
-		  },
-		  {
-		    name: 'Linus Torvalds',
-		    avatar_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/LinuxCon_Europe_Linus_Torvalds_03_%28cropped%29.jpg/220px-LinuxCon_Europe_Linus_Torvalds_03_%28cropped%29.jpg',
-		    subtitle: 'Lorem ipsum dolor sit amet'
-		  },
-		  {
-		    name: 'Jessica Milla',
-		    avatar_url: 'https://media.tabloidbintang.com/files/thumb/jessica-mila_2.jpg/745',
-		    subtitle: 'Lorem ipsum dolor sit amet'
-		  },
-		  {
-		    name: 'Nabila Ratna Ayu',
-		    avatar_url: 'https://cdn2.tstatic.net/jakarta/foto/bank/images/nabilah-ayu_20180505_131901.jpg',
-		    subtitle: 'Lorem ipsum dolor sit amet'
-		  },
-		]
     return (
       <View style={{flex: 1}}>
       <StatusBar backgroundColor="#1d87db" barStyle="light-content" />
@@ -67,17 +68,15 @@ class Home extends Component {
       	<View style={{flex: 14}}>
 	      	<ScrollView>
 	      		 {
-				    list.map((l, i) => (
+				   this.state.chatlists.map((chatlist, i) => (
+				   	<TouchableOpacity key={i} onPress={() => { this.props.navigation.navigate('Chat', { room_id: chatlist.id }) }}>
 				      <ListItem
-				        key={i}
-				        leftAvatar={{ source: { uri: l.avatar_url }, size: 55 }}
-				        title={l.name}
+				        title={chatlist.name}
 				        titleStyle={{ fontWeight: '500', fontSize: 18, color: '#454545' }}
-				        subtitle={l.subtitle}
-				        subtitleStyle={{paddingTop: 5}}
 				        rightTitle="20.00"
 				        rightTitleStyle={{fontSize: 12}}
 				      />
+				     </TouchableOpacity>
 				    ))
 				  }
 			</ScrollView>

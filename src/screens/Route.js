@@ -6,10 +6,13 @@ import Chat from "./Chat/Chat"
 import { createStackNavigator, createAppContainer, createSwitchNavigator } from 'react-navigation'
 
 const AppStack = createStackNavigator(
-
     {
         Home: {
             screen: Home,
+            navigationOptions: { gesturesEnabled: true }
+        },
+        Chat: {
+            screen: Chat,
             navigationOptions: { gesturesEnabled: true }
         }
     },
