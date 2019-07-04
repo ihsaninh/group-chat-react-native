@@ -24,7 +24,7 @@ class Chat extends Component {
             user_id: null,
             chatid: null,
         };
-        setInterval(this.getDataChat, 1000);
+        setInterval(this.getDataChat, 500);
     }
 
     componentDidMount() {
@@ -35,6 +35,12 @@ class Chat extends Component {
     // setModalVisible(visible, chatid) {
     //     this.setState({ modalVisible: visible, chatid: chatid });
     // }
+
+    static navigationOptions = ({ navigation }) => {
+	    return {
+		    title: navigation.getParam('room_name', navigation.state.params.room_name)
+		};
+	};
 
     getUserData = async () => {
         const token = await AsyncStorage.getItem("token");
@@ -67,6 +73,7 @@ class Chat extends Component {
                 const chats = res.data.chat;
                 this.setState({
                     chats: chats,
+                    // myId: res.data.myId
                 });
             })
             .catch(err => {
@@ -107,23 +114,18 @@ class Chat extends Component {
         const headers = {
             Authorization: "Bearer " + token
         };
-        const data = {
-            content: this.state.inputContent
-            room_id: room_id
-        };
+
         axios
-            .post("http://192.168.0.26:3333/api/v1/chats", data, { headers: headers })
+            .post("http://192.168.0.26:3333/api/v1/chats/", { content: this.state.inputContent, room_id: room_id }, { headers: headers })
             .then(res => {
-            	console.log(res)
-                // this.setState({
-                //     inputContent: ""
-                // });
+                this.setState({
+                    inputContent: ""
+                });
             })
-            .catch(error => {
-                alert("ra ono isine mas");
+            .catch(err => {
+                alert("ada error saat menambah data");
             });
     };
-
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: "#ffffff" }}>

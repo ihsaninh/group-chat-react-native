@@ -20,7 +20,6 @@ const AppStack = createStackNavigator(
         defaultNavigationOptions: {
             initialRouteName: Chat,
             resetOnBlur: true,
-            header: null
         }
     }
 );

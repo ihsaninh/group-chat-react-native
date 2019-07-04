@@ -18,6 +18,10 @@ class Home extends Component {
 		 this.getListChat();
 	}
 
+	static navigationOptions = {
+  	  header: null,
+  	};
+
 	getListChat = async () => {
         const token = await AsyncStorage.getItem("token");
         const headers = {
@@ -69,10 +73,13 @@ class Home extends Component {
 	      	<ScrollView>
 	      		 {
 				   this.state.chatlists.map((chatlist, i) => (
-				   	<TouchableOpacity key={i} onPress={() => { this.props.navigation.navigate('Chat', { room_id: chatlist.id }) }}>
+				   	<TouchableOpacity key={i} onPress={() => { this.props.navigation.navigate('Chat', { room_id: chatlist.id, room_name: chatlist.name }) }}>
 				      <ListItem
+				        leftAvatar={{ source: { uri: 'https://www.arkademy.com/asset/images/ico.png' }, size: 55 }}
 				        title={chatlist.name}
 				        titleStyle={{ fontWeight: '500', fontSize: 18, color: '#454545' }}
+				        titleStyle={{ fontWeight: '500', fontSize: 18, color: '#454545' }}
+				        subtitle={chatlist.chat[0].user.username + ": " + chatlist.chat[0].content}
 				        rightTitle="20.00"
 				        rightTitleStyle={{fontSize: 12}}
 				      />
