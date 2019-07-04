@@ -1,14 +1,5 @@
 import React, { Component } from "react";
-import {
-    StyleSheet,
-    View,
-    Text,
-    ScrollView,
-    AsyncStorage,
-    TouchableOpacity,
-    TextInput,
-    Modal
-} from "react-native";
+import { StyleSheet, View, Text, ScrollView, AsyncStorage, TouchableOpacity, TextInput, Modal } from "react-native";
 import { Button, ListItem } from "react-native-elements";
 import axios from "axios";
 import moment from 'moment';
@@ -16,13 +7,13 @@ import moment from 'moment';
 class Chat extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             inputContent: "",
             chats: [],
             modalVisible: false,
             user_id: null,
             chatid: null,
+            edited: false
         };
         setInterval(this.getDataChat, 500);
     }
@@ -90,6 +81,55 @@ class Chat extends Component {
             });
     };
 
+    handleSingleChat = async chatid => {
+        this.setState({
+            edited:true
+        })
+        const token = await AsyncStorage.getItem("token");
+        const headers = {
+            Authorization: "Bearer " + token
+        };
+        var chatid = chatid;
+        this.setState({
+            chatid: chatid
+        })
+         axios
+            .get(`http://192.168.0.26:3333/api/v1/chats/${chatid}`, { headers })
+            .then(res => {
+                const chatContent = res.data.data.content;
+                this.setState({
+                    inputContent: chatContent,
+                    modalVisible: !this.state.modalVisible
+                });
+            })
+            .catch(err => {
+                alert("gagal fetch data");
+            });
+    }
+
+    handleUpdate = async chatid => {
+        const token = await AsyncStorage.getItem("token");
+        const { navigation } = this.props;
+        const room_id = navigation.getParam('room_id', this.props.navigation.state.params.room_id);
+        const headers = {
+            Authorization: "Bearer " + token
+        };
+        var chatid = this.state.chatid;
+
+        axios
+            .patch(`http://192.168.0.26:3333/api/v1/chats/${chatid}`, { content: this.state.inputContent, room_id: room_id }, { headers: headers })
+            .then(res => {
+                this.setState({
+                    inputContent: "",
+                    edited: false
+                });
+            })
+            .catch(err => {
+                console.log(err)
+                alert("ada error saat mengupdate data");
+            });
+    };
+
     handleDelete = async chatid => {
         const token = await AsyncStorage.getItem("token");
         const headers = {
@@ -135,6 +175,7 @@ class Chat extends Component {
                 alert("ada error saat menambah data");
             });
     };
+
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
@@ -217,8 +258,7 @@ class Chat extends Component {
                                     marginLeft: 5
                                 }}
                                 title="Kirim"
-                                onPress={this.handleCreate}
-                                value={this.state.inputContent}
+                                onPress={(this.state.edited===true) ? this.handleUpdate : this.handleCreate}
                             />
                         </TouchableOpacity>
                     </View>
@@ -249,6 +289,9 @@ class Chat extends Component {
                                 <Button
                                     containerStyle={{ marginRight: 10 }}
                                     title="Edit Chat"
+                                    onPress={() =>
+                                        this.handleSingleChat(this.state.chatid)
+                                    }
                                 />
                                 <Button
                                     title="Delete Chat"
