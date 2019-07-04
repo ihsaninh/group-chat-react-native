@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, Image, StatusBar, TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
 import { Icon, ListItem, Avatar } from 'react-native-elements';
+import {ENV} from '../../../library/utils/Environment';
 import axios from 'axios';
 
 class Home extends Component {
@@ -34,7 +35,7 @@ class Home extends Component {
             Authorization: "Bearer " + token
         };
         axios
-            .get("http://192.168.0.26:3333/api/v1/rooms/", { headers })
+            .get(`${ENV.API_URL}/api/v1/rooms/`, { headers })
             .then(res => {
                 const chatlists = res.data.data;
                 this.setState({
@@ -42,7 +43,7 @@ class Home extends Component {
                 });
             })
             .catch(err => {
-               
+               alert('Terjadi error saat mengambil data Room')
             });
     };
 

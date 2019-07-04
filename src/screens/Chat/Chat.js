@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, ScrollView, AsyncStorage, TouchableOpacity, Tex
 import { Button, ListItem, Icon } from "react-native-elements";
 import axios from "axios";
 import moment from 'moment';
+import {ENV} from '../../../library/utils/Environment';
 
 class Chat extends Component {
     constructor(props) {
@@ -57,7 +58,7 @@ class Chat extends Component {
             Authorization: "Bearer " + token
         };
         axios
-            .get("http://192.168.0.26:3333/api/auth/getuser", { headers })
+            .get(`${ENV.API_URL}/api/auth/getuser`, { headers })
             .then(res => {
                 const user_id = res.data.id;
                 this.setState({
@@ -65,7 +66,7 @@ class Chat extends Component {
                 });
             })
             .catch(err => {
-                alert('Ada error terjadi')
+                
             });
     };
 
@@ -77,7 +78,7 @@ class Chat extends Component {
             Authorization: "Bearer " + token
         };
         axios
-            .get(`http://192.168.0.26:3333/api/v1/rooms/${room_id}`, { headers })
+            .get(`${ENV.API_URL}/api/v1/rooms/${room_id}`, { headers })
             .then(res => {
                 const chats = res.data.chat;
                 this.setState({
@@ -102,7 +103,7 @@ class Chat extends Component {
             chatid: chatid
         })
          axios
-            .get(`http://192.168.0.26:3333/api/v1/chats/${chatid}`, { headers })
+            .get(`${ENV.API_URL}/api/v1/chats/${chatid}`, { headers })
             .then(res => {
                 const chatContent = res.data.data.content;
                 this.setState({
@@ -125,7 +126,7 @@ class Chat extends Component {
         var chatid = this.state.chatid;
 
         axios
-            .patch(`http://192.168.0.26:3333/api/v1/chats/${chatid}`, { content: this.state.inputContent, room_id: room_id }, { headers: headers })
+            .patch(`${ENV.API_URL}/api/v1/chats/${chatid}`, { content: this.state.inputContent, room_id: room_id }, { headers: headers })
             .then(res => {
                 this.setState({
                     inputContent: "",
@@ -133,7 +134,6 @@ class Chat extends Component {
                 });
             })
             .catch(err => {
-                alert('Ada error terjadi')
                 alert("ada error saat mengupdate data");
             });
     };
@@ -145,7 +145,7 @@ class Chat extends Component {
         };
         var chatid = chatid;
         axios
-            .delete(`http://192.168.0.26:3333/api/v1/chats/${chatid}`, {
+            .delete(`${ENV.API_URL}/api/v1/chats/${chatid}`, {
                 headers: headers
             })
             .then(res => {
@@ -166,7 +166,7 @@ class Chat extends Component {
         };
 
         axios
-            .post("http://192.168.0.26:3333/api/v1/chats/", { content: this.state.inputContent, room_id: room_id }, { headers: headers })
+            .post(`${ENV.API_URL}/api/v1/chats/`, { content: this.state.inputContent, room_id: room_id }, { headers: headers })
             .then(res => {
                 this.setState({
                     inputContent: ""

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, Text, Image, ImageBackground, ScrollView, Dimensions, AsyncStorage } from 'react-native'
 import { Input, Icon, Avatar } from 'react-native-elements'
+import {ENV} from '../../../library/utils/Environment'
 import axios from 'axios'
 
 class Login extends Component {
@@ -14,7 +15,7 @@ class Login extends Component {
 	}
 	
 	handleLogin = () => {
-        axios.post("http://192.168.0.26:3333/api/auth/login", {
+        axios.post(`${ENV.API_URL}/api/auth/login`, {
                 email: this.state.inputEmail,
                 password: this.state.inputPassword
             })
