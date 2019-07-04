@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Button, ListItem } from "react-native-elements";
 import axios from "axios";
-import TimeAgo from "react-native-timeago";
+import moment from 'moment';
 
 class Chat extends Component {
     constructor(props) {
@@ -32,13 +32,23 @@ class Chat extends Component {
         this.getUserData();
     }
 
-    // setModalVisible(visible, chatid) {
-    //     this.setState({ modalVisible: visible, chatid: chatid });
-    // }
+    setModalVisible(visible, chatid) {
+        this.setState({ modalVisible: visible, chatid: chatid });
+    }
 
     static navigationOptions = ({ navigation }) => {
 	    return {
-		    title: navigation.getParam('room_name', navigation.state.params.room_name)
+		    title: navigation.getParam('room_name', navigation.state.params.room_name),
+		    headerTitleStyle: {
+		      fontWeight: 'bold',
+		      fontSize: 16,
+		      color: '#fff',
+		      marginLeft: 0
+		    },
+		    headerTintColor: '#fff',
+		    headerStyle: {
+		      backgroundColor: '#2196f3',
+		    },
 		};
 	};
 
@@ -73,7 +83,6 @@ class Chat extends Component {
                 const chats = res.data.chat;
                 this.setState({
                     chats: chats,
-                    // myId: res.data.myId
                 });
             })
             .catch(err => {
@@ -81,24 +90,24 @@ class Chat extends Component {
             });
     };
 
-    // handleDelete = async chatid => {
-    //     const token = await AsyncStorage.getItem("token");
-    //     const headers = {
-    //         Authorization: "Bearer " + token
-    //     };
-    //     var chatid = chatid;
-    //     axios
-    //         .delete(`http://192.168.0.26:3000/chats/${chatid}`, {
-    //             headers: headers
-    //         })
-    //         .then(res => {
-    //             this.setState({ modalVisible: !this.state.modalVisible });
-    //             alert("chat berhasil dihapus");
-    //         })
-    //         .catch(error => {
-    //             alert(error);
-    //         });
-    // };
+    handleDelete = async chatid => {
+        const token = await AsyncStorage.getItem("token");
+        const headers = {
+            Authorization: "Bearer " + token
+        };
+        var chatid = chatid;
+        axios
+            .delete(`http://192.168.0.26:3333/api/v1/chats/${chatid}`, {
+                headers: headers
+            })
+            .then(res => {
+                this.setState({ modalVisible: !this.state.modalVisible });
+                alert("chat berhasil dihapus");
+            })
+            .catch(error => {
+                alert(error);
+            });
+    };
 
     // handleLogout = async () => {
     //     console.log('ok')
@@ -165,21 +174,9 @@ class Chat extends Component {
                                                     }}>
                                                     {chat.content}
                                                 </Text>
-                                                <Text
-                                                    style={{
-                                                        color: "#f0f0f0"
-                                                    }}>
-                                                    <TimeAgo
-                                                        style={{
-                                                            color: "#f0f0f0"
-                                                        }}
-                                                        time={chat.createdAt}
-                                                    />
-                                                </Text>
+                                                <Text style={{ color: "#f0f0f0", textAlign: 'right' }}>{ moment(chat.created_at, 'YYYY-MM-DD HH:mm:ss').format('HH:mm')}</Text>
                                             </View>
                                         }
-                                        chevronColor="white"
-                                        chevron
                                     />
                                 </TouchableOpacity>
                             </View>
@@ -272,14 +269,14 @@ const styles = StyleSheet.create({
     contentuser: {
         backgroundColor: "#2196f3",
         marginLeft: 50,
-        borderRadius: 20,
+        borderRadius: 10,
         width: "80%",
         height: 75
     },
     contentuserlain: {
-        backgroundColor: "orange",
+        backgroundColor: "#ff9800",
         marginLeft: 5,
-        borderRadius: 20,
+        borderRadius: 10,
         width: "80%",
         height: 75
     }
