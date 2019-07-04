@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, ScrollView, AsyncStorage, TouchableOpacity, TextInput, Modal } from "react-native";
-import { Button, ListItem } from "react-native-elements";
+import { Button, ListItem, Icon } from "react-native-elements";
 import axios from "axios";
 import moment from 'moment';
 
@@ -36,6 +36,14 @@ class Chat extends Component {
 		      color: '#fff',
 		      marginLeft: 0
 		    },
+            headerRight: (
+                <Icon
+                    name='more-vert'
+                    type='material'
+                    color='#ffffff'
+                    containerStyle={{marginRight: 10}}
+                />
+            ),
 		    headerTintColor: '#fff',
 		    headerStyle: {
 		      backgroundColor: '#2196f3',
@@ -57,7 +65,7 @@ class Chat extends Component {
                 });
             })
             .catch(err => {
-                alert("gagal fetch data");
+                alert('Ada error terjadi')
             });
     };
 
@@ -77,7 +85,7 @@ class Chat extends Component {
                 });
             })
             .catch(err => {
-                alert("gagal fetch data");
+                alert('Ada error terjadi')
             });
     };
 
@@ -103,7 +111,7 @@ class Chat extends Component {
                 });
             })
             .catch(err => {
-                alert("gagal fetch data");
+                alert('Ada error terjadi')
             });
     }
 
@@ -125,7 +133,7 @@ class Chat extends Component {
                 });
             })
             .catch(err => {
-                console.log(err)
+                alert('Ada error terjadi')
                 alert("ada error saat mengupdate data");
             });
     };
@@ -149,13 +157,6 @@ class Chat extends Component {
             });
     };
 
-    // handleLogout = async () => {
-    //     console.log('ok')
-    //     const token = await AsyncStorage.getItem("token");
-    //     AsyncStorage.removeItem("token");
-    //     this.props.navigation.navigate("Login");
-    // };
-
     handleCreate = async () => {
         const token = await AsyncStorage.getItem("token");
         const { navigation } = this.props;
@@ -172,7 +173,7 @@ class Chat extends Component {
                 });
             })
             .catch(err => {
-                alert("ada error saat menambah data");
+                alert("Field tidak boleh kosong");
             });
     };
 
@@ -194,9 +195,8 @@ class Chat extends Component {
                                 }}
                                 key={i}>
                                 <TouchableOpacity
-                                    onLongPress={() => {
-                                        this.setModalVisible(true, chat.id);
-                                    }}>
+                                activeOpacity={0.8}
+                                    onLongPress={chat.user.id === this.state.user_id ? () => {this.setModalVisible(true, chat.id) } : ''}>
                                     <ListItem
                                         containerStyle={
                                             chat.user.id === this.state.user_id
@@ -264,43 +264,43 @@ class Chat extends Component {
                     </View>
                 </View>
                 <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={this.state.modalVisible}
-                    onRequestClose={() => {
-                        this.setModalVisible(!this.state.modalVisible);
-                    }}>
-                    <View
-                        style={{
-                            flex: 1,
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: "rgba(0,0,0,0.5)"
+                        animationType="slide"
+                        transparent={true}
+                        visible={this.state.modalVisible}
+                        onRequestClose={() => {
+                            this.setModalVisible(!this.state.modalVisible);
                         }}>
                         <View
                             style={{
-                                width: 300,
-                                height: 300,
+                                flex: 1,
+                                flexDirection: "column",
+                                justifyContent: "center",
                                 alignItems: "center",
-                                justifyContent: "center"
+                                backgroundColor: "rgba(0,0,0,0.5)"
                             }}>
-                            <View style={{ flexDirection: "row" }}>
-                                <Button
-                                    containerStyle={{ marginRight: 10 }}
-                                    title="Edit Chat"
-                                    onPress={() =>
-                                        this.handleSingleChat(this.state.chatid)
-                                    }
-                                />
-                                <Button
-                                    title="Delete Chat"
-                                    onPress={() =>
-                                        this.handleDelete(this.state.chatid)
-                                    }
-                                />
+                            <View
+                                style={{
+                                    width: 300,
+                                    height: 300,
+                                    alignItems: "center",
+                                    justifyContent: "center"
+                                }}>
+                                <View style={{ flexDirection: "row" }}>
+                                    <Button
+                                        containerStyle={{ marginRight: 10 }}
+                                        title="Edit Chat"
+                                        onPress={() =>
+                                            this.handleSingleChat(this.state.chatid)
+                                        }
+                                    />
+                                    <Button
+                                        title="Delete Chat"
+                                        onPress={() =>
+                                            this.handleDelete(this.state.chatid)
+                                        }
+                                    />
+                                </View>
                             </View>
-                        </View>
                     </View>
                 </Modal>
             </View>

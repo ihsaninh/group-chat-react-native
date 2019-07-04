@@ -22,6 +22,12 @@ class Home extends Component {
   	  header: null,
   	};
 
+  	handleLogout = async () => {
+        const token = await AsyncStorage.getItem("token");
+        AsyncStorage.removeItem("token");
+        this.props.navigation.navigate("Login");
+    };
+
 	getListChat = async () => {
         const token = await AsyncStorage.getItem("token");
         const headers = {
@@ -36,7 +42,7 @@ class Home extends Component {
                 });
             })
             .catch(err => {
-                alert("gagal fetch data");
+               
             });
     };
 
@@ -58,14 +64,10 @@ class Home extends Component {
 	      		<View style={{ flex: 5}}>
 	      			<Text style={{marginTop: 16, color: '#ffffff', fontSize: 26, fontWeight: '500', marginLeft: 10}}>ChatsApp</Text>
 	      		</View>
-	      		<View style={{ flex: 1}}>
-	      			<Icon
-	      			  containerStyle={{marginTop: 14}}
-					  name='md-search'
-					  type='ionicon'
-					  color='#ffffff'
-					  size={28}
-					/>
+	      		<View style={{ flex: 2}}>
+	      		<TouchableOpacity onPress={this.handleLogout}>
+	      			<Text style={{marginTop: 18, color: '#ffffff', fontSize: 18, fontWeight: '500', marginLeft: 15}}>Logout</Text>
+				</TouchableOpacity>
 	      		</View>
 	      	</View>
       	</View>
@@ -75,7 +77,7 @@ class Home extends Component {
 				   this.state.chatlists.map((chatlist, i) => (
 				   	<TouchableOpacity key={i} onPress={() => { this.props.navigation.navigate('Chat', { room_id: chatlist.id, room_name: chatlist.name }) }}>
 				      <ListItem
-				        leftAvatar={{ source: { uri: 'https://www.arkademy.com/asset/images/ico.png' }, size: 55 }}
+				        leftAvatar={{ source: { uri: chatlist.avatar }, size: 55 }}
 				        title={chatlist.name}
 				        titleStyle={{ fontWeight: '500', fontSize: 18, color: '#454545' }}
 				        titleStyle={{ fontWeight: '500', fontSize: 18, color: '#454545' }}
