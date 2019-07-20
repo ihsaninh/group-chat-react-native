@@ -49,13 +49,11 @@ Group Chat App build with React Native. You can chat with other people on group 
 
 ## Screenshoot
 <div align="center">
-    <img width="200" src="https://github.com/ihsaninh/fb-clone-react-native/blob/master/screenshots/LOGIN.png">   
-    <img width="200" src="https://github.com/ihsaninh/fb-clone-react-native/blob/master/screenshots/FEED.png">  
-    <img width="200" src="https://github.com/ihsaninh/fb-clone-react-native/blob/master/screenshots/FRIENDLIST.png">    
-    <img width="200" src="https://github.com/ihsaninh/fb-clone-react-native/blob/master/screenshots/ADDSTATUS.png">   
-    <img width="200" src="https://github.com/ihsaninh/fb-clone-react-native/blob/master/screenshots/MARKETPLACE.png">   
-    <img width="200" src="https://github.com/ihsaninh/fb-clone-react-native/blob/master/screenshots/MORESETTING.png">   
-    <img width="200" src="https://github.com/ihsaninh/fb-clone-react-native/blob/master/screenshots/NOTIFICATION.png">   
+    <img width="200" src="https://github.com/ihsaninh/react-native-chat-v2/blob/master/LOGIN.jpg">   
+    <img width="200" src="https://github.com/ihsaninh/react-native-chat-v2/blob/master/HOME.jpg">  
+    <img width="200" src="https://github.com/ihsaninh/react-native-chat-v2/blob/master/screenshots/CHATROOM.jpg.jpg">    
+    <img width="200" src="https://github.com/ihsaninh/react-native-chat-v2/blob/master/screenshots/CHATROOM2.jpg.jpg">   
+    <img width="200" src="https://github.com/ihsaninh/react-native-chat-v2/blob/master/screenshots/EDITDELETE.jpg">    
 </div>
 
 
