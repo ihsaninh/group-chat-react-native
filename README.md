@@ -12,7 +12,7 @@
 - [Introduction](#introduction)
 - [Features](#features)
 - [Requirements](#requirements)
-- [Screenshots](#screenshots)
+- [Screenshoots](#screenshoot)
 - [Contributors](#contributors)
 
 ## Introduction
