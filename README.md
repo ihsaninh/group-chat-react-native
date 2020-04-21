@@ -36,7 +36,7 @@ Group Chat App build with React Native. You can chat with other people on group 
    ```
    $ git clone https://github.com/ihsaninh/react-native-chat-v2.git
    ```
-2. Install all depedencies on the package.json
+2. Install all dependencies on the package.json
    ```
    $ cd fb-clone-react-native
    $ npm install
@@ -47,7 +47,7 @@ Group Chat App build with React Native. You can chat with other people on group 
    $ react-native run-android or react-native run-ios
    ```
 
-## Screenshoot
+## Screenshot
 <div align="center">
     <img width="200" src="https://github.com/ihsaninh/react-native-chat-v2/blob/master/LOGIN.jpg">   
     <img width="200" src="https://github.com/ihsaninh/react-native-chat-v2/blob/master/HOME.jpg">  
